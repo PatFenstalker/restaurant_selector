@@ -1,0 +1,32 @@
+resturaunt selector app idea
+
+things it needs to do:
+
+take in and store resturaunt name in a companion document or database open file with read write access (done)
+
+figure out how data will be stored in the text document to pull sections for each resturaunt (done)
+
+give me the option to select a number of resturaunts from the companion document (done)
+
+randomly select which resturaunt we go to (done-ish)
+
+make gui (done)
+
+
+steps for selection:
+
+for more than two options:
+
+roll dice 
+
+whichever gets 3 first wins
+
+
+for two options:
+
+flip a coin
+
+whichever gets to 3 first
+
+pick the opposite and that in the winner
+
