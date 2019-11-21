@@ -30,3 +30,11 @@ whichever gets to 3 first
 
 pick the opposite and that in the winner
 
+
+things we need to do:
+
+somehow make the enter key do nothing or make it trigger the add button
+
+make the text update of the check page when an item is added to the database from the add page
+
+finish the choose restaurant page (done)
