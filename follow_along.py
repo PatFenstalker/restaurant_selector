@@ -36,7 +36,7 @@ class LandingPage(Frame):
         canvas = Canvas(self, height=200, width=1000)
         canvas.pack()
 
-        background_image = PhotoImage(file='flavortown.png')
+        background_image = PhotoImage(file='C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\flavortown.png')
         background_label = Label(self, image=background_image)
         background_label.image = background_image
         background_label.place(relheight = 1, relwidth = 1)
@@ -74,7 +74,7 @@ class CheckRestaurants(Frame):
         canvas = Canvas(self, height=800, width=1000)
         canvas.pack()
 
-        background_image = PhotoImage(file='flavortown.png')
+        background_image = PhotoImage(file='C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\flavortown.png')
         background_label = Label(self, image=background_image)
         background_label.image = background_image
         background_label.place(relheight = 1, relwidth = 1)
@@ -84,22 +84,12 @@ class CheckRestaurants(Frame):
 
         restaurants_in_data_file = []
 
-        with open('restaurant_database.txt', 'r') as data:
+        with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'r') as data:
             for line in data:
                 if 'Name: ' in line:
                     restaurants_in_data_file.append(str(line.strip()[6:]))
         
-        test = 'Restaurants currently in the list:\n\n' + '\n'.join(map(''.join, set(restaurants_in_data_file)))
-
-
-        def refresh_list(self):
-            with open('restaurant_database.txt', 'r') as data:
-                for line in data:
-                    if 'Name: ' in line:
-                        restaurants_in_data_file.append(str(line.strip()[6:]))
-                        test = line
-                        return test
-
+        test = 'Restaurants currently in the list:\n\n' + '\n'.join(map(''.join, sorted(set(restaurants_in_data_file))))
 
         header_label = Label(bottom_frame, text = test, bg='#e5d6b9', font='Arial', anchor='n')
         header_label.place(relx = 0, rely = 0, relwidth = 1, relheight = 1)
@@ -110,6 +100,30 @@ class CheckRestaurants(Frame):
         back = Button(bottom_frame, text = 'Back', fg='white', bg='#4e3632', command= lambda:controller.show_frame(LandingPage))
         back.place(relx = 0.65, rely = 0.9)
 
+        def refresh_list(self):
+            bottom_frame.after(0, bottom_frame.destroy)
+
+            new_frame = Frame(self, bg='#dc9955', bd=10)
+            new_frame.place(relx = 0.5, rely = 0.1, relwidth=0.4, relheight=0.75, anchor='n')
+        
+            restaurants_in_data_file = []
+
+            with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'r') as data:
+                for line in data:
+                    if 'Name: ' in line:
+                        restaurants_in_data_file.append(str(line.strip()[6:]))
+            
+            test = 'Restaurants currently in the list:\n\n' + '\n'.join(map(''.join, sorted(set(restaurants_in_data_file))))
+
+            header_label = Label(new_frame, text = test, bg='#e5d6b9', font='Arial', anchor='n')
+            header_label.place(relx = 0, rely = 0, relwidth = 1, relheight = 1)
+
+            refresh = Button(new_frame, text = 'Refresh', fg='white', bg='#4e3632', command= lambda: refresh_list(self))
+            refresh.place(relx = 0.25, rely = 0.9)
+            
+            back = Button(new_frame, text = 'Back', fg='white', bg='#4e3632', command= lambda:controller.show_frame(LandingPage))
+            back.place(relx = 0.65, rely = 0.9)
+
 
 class AddRestaurants(Frame):
     def __init__(self, parent, controller):
@@ -118,7 +132,7 @@ class AddRestaurants(Frame):
         canvas = Canvas(self, height=800, width=1000)
         canvas.pack()
 
-        background_image = PhotoImage(file='flavortown.png')
+        background_image = PhotoImage(file='C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\flavortown.png')
         background_label = Label(self, image=background_image)
         background_label.image = background_image
         background_label.place(relheight = 1, relwidth = 1)
@@ -129,29 +143,29 @@ class AddRestaurants(Frame):
         header_label = Label(bottom_frame, text = 'Enter the restaurant you would like to add to the list.', bg='#e5d6b9', font='Arial', anchor='n', pady=25)
         header_label.place(relx = 0, rely = 0, relwidth = 1, relheight = 1)
 
-        entry_field = Text(bottom_frame, font= 'Arial', width = 20, height = 1, bd = 5)
-
-        entry_field.place(relx = 0.13, rely = 0.35)
 
         def retrieve_input(self):
             user_input = entry_field.get("1.0","end-1c")
             
-            with open('restaurant_database.txt', 'a+') as file:
+            with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'a+') as file:
                 n = '\n\nName: '
                 file.write(n + user_input.title())
 
         def delete_text(self):
             entry_field.delete(1.0, END)
-
-        def enter_key_bind(self, event=None):
-            print('enter')
-
-        
-
+       
         add_to_list = Button(bottom_frame, text = 'Add', fg='white', bg='#4e3632', command = lambda: [retrieve_input(self), delete_text(self)])
+        
         add_to_list.place(relx = 0.615, rely = 0.35, relwidth = 0.25, relheight = 0.13)
 
-        add_to_list.bind('<Return>', enter_key_bind(self))
+        entry_field = Text(bottom_frame, font= 'Arial', width = 20, height = 1, bd = 5)
+
+        entry_field.bind('<KeyPress-Return>', retrieve_input)
+        entry_field.bind('<KeyRelease-Return>', delete_text)
+
+        entry_field.place(relx = 0.13, rely = 0.35)
+
+        
 
         back = Button(bottom_frame, text = 'Back', fg='white', bg='#4e3632', command = lambda:controller.show_frame(LandingPage))
         back.place(relx = 0.5, rely = 0.75)
@@ -164,7 +178,7 @@ class ChooseRestaurants(Frame):
         canvas = Canvas(self, height=800, width=1000)
         canvas.pack()
 
-        background_image = PhotoImage(file='flavortown.png')
+        background_image = PhotoImage(file='C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\flavortown.png')
         background_label = Label(self, image=background_image)
         background_label.image = background_image
         background_label.place(relheight = 1, relwidth = 1)
@@ -185,11 +199,16 @@ class ChooseRestaurants(Frame):
         selectbackground = '#e5c558', highlightcolor = '#000000', font = 'Arial 12 bold')
         in_list.place(relx = 0.35, rely = 0.2)
 
+        #listbox_scrollbar = Scrollbar(in_list, orient = 'vertical')
+        #listbox_scrollbar.pack()
+        #listbox_scrollbar.config(command = in_list.yview)
+        #in_list.config(yscrollcommand=listbox_scrollbar.set)
+
         in_file_list = []
 
         final_selection = []
 
-        with open('restaurant_database.txt', 'r') as file:
+        with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'r') as file:
             for line in file:
                 if 'Name: ' in line:
                     in_file_list.append(str(line.strip()[6:]))
@@ -208,12 +227,10 @@ class ChooseRestaurants(Frame):
             for rest in sel_list:
                 final_selection.append(rest.strip())
 
-        
         def reset(self):
             for item in final_selection:
                 final_selection.remove(item)
                 in_list.selection_clear(0, END)
-        
 
         def rand_number(self):
             rand_num = random.randint(0, 100)
@@ -221,6 +238,17 @@ class ChooseRestaurants(Frame):
 
         def select_winner(self):
 
+
+            print('ifl')
+            for item in final_selection:
+                print(item)
+            print('--------------')
+
+            print('fs')
+
+            for item in final_selection:
+                print(item)
+            print('--------------')
 
             # creates a range from 1 - 100
 
@@ -252,13 +280,124 @@ class ChooseRestaurants(Frame):
                     if number == array_num:
                         MessageBox = ctypes.windll.user32.MessageBoxW
                         MessageBox(None, f'{key} is the winner!', 'Winner!', 0)
+
+
+
+           
+            #for key, value in combined_dict.items():
+            #    for array_num in value:
+##
+ #                   win_counter = 0
+#
+ #                   while win_counter < 3:
+#
+ #                       if random.randint(0,100) == array_num:
+  #                          win_counter += 1
+   #                         print(random.randint(0,100))
+#
+ #                   if win_counter == 3:
+  #                      MessageBox = ctypes.windll.user32.MessageBoxW
+   #                     MessageBox(None, f'{key} is the winner!\nWin counter: {win_counter}', 'Winner!', 0)
+                         
+                        
+        
+
+
+
+
+        def clear_final_selection(self):
+            for item in in_file_list:
+                while item in in_file_list:
+                    in_file_list.remove(item)
+
+            for item in final_selection:
+                while item in final_selection:
+                    final_selection.remove(item)
+            
+            in_list.selection_clear(0, END)
+
+            
+
                         
         back = Button(bottom_frame, text = 'Back', fg='white', bg='#4e3632', command= lambda: [controller.show_frame(LandingPage), reset(self)])
         back.place(relx = 0.35, rely = 0.85, relwidth = 0.1)
 
+        refresh_btn = Button(bottom_frame, text = 'Refresh', fg='white', bg='#4e3632', command= lambda: refresh_listbox(self))
+        refresh_btn.place(relx = 0.75, rely = 0.85, relwidth = 0.1)
+
         choose_rest = Button(bottom_frame, text = 'Choose Restaurant', fg='white', bg='#4e3632', 
-        command = lambda: [check_if_selected(self), select_winner(self)])
+        command = lambda: [check_if_selected(self), select_winner(self), clear_final_selection(self)])
         choose_rest.place(relx = 0.5, rely = 0.85)
+
+        def refresh_listbox(self):
+            in_list.after(0, in_list.destroy)
+            back.after(0, back.destroy)
+            choose_rest.after(0, choose_rest.destroy)
+            refresh_btn.after(0, refresh_btn.destroy)
+
+            for resta in in_file_list:
+                del resta
+
+            print(in_file_list)
+            print('---------')
+
+            for restau in final_selection:
+                del restau
+            
+            print(final_selection)
+            print('---------')
+
+            new_in_list = Listbox(bottom_frame, selectmode = MULTIPLE, activestyle = 'none', width = 25, bg = '#bfb97f',
+            selectbackground = '#e5c558', highlightcolor = '#000000', font = 'Arial 12 bold')
+            new_in_list.place(relx = 0.35, rely = 0.2)
+
+            with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'r') as file:
+                for line in file:
+                    if 'Name: ' in line:
+                        in_file_list.append(str(line.strip()[6:]))
+
+            num = 0
+            
+            for item in sorted(set(in_file_list)):
+                num += 1
+                item_space = '                      ' + item            
+                new_in_list.insert(num, item_space)
+            
+            def new_check_if_selected(self):
+                all_items = new_in_list.get(0, END)
+                sel_idx = new_in_list.curselection()
+                sel_list = [all_items[item] for item in sel_idx]
+                for rest in sel_list:
+                    final_selection.append(rest.strip())
+
+            def new_clear_final_selection(self):
+                for item in in_file_list:
+                    while item in in_file_list:
+                        in_file_list.remove(item)
+
+                for item in final_selection:
+                    while item in final_selection:
+                        final_selection.remove(item)
+                
+                new_in_list.selection_clear(0, END)
+
+                for item in final_selection:
+                    print(item)  
+
+
+            new_back = Button(bottom_frame, text = 'Back', fg='white', bg='#4e3632', command= lambda: [controller.show_frame(LandingPage)])
+            new_back.place(relx = 0.35, rely = 0.85, relwidth = 0.1)
+
+            new_choose_rest = Button(bottom_frame, text = 'Choose Restaurant', fg='white', bg='#4e3632', 
+            command = lambda: [new_check_if_selected(self), select_winner(self), new_clear_final_selection(self)])
+            new_choose_rest.place(relx = 0.5, rely = 0.85)
+
+            new_refresh_btn = Button(bottom_frame, text = 'Refresh', fg='white', bg='#4e3632', command= lambda: [refresh_listbox(self)])
+            new_refresh_btn.place(relx = 0.75, rely = 0.85, relwidth = 0.1)
+
+
+
+
 
 window = Window()
 window.maxsize(1000, 800)
