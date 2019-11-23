@@ -35,6 +35,8 @@ things we need to do:
 
 somehow make the enter key do nothing or make it trigger the add button
 
-make the text update of the check page when an item is added to the database from the add page
+make the text update of the check page when an item is added to the database from the add page (done)
 
 finish the choose restaurant page (done)
+
+get the items removed from a list after the selection process (as good as they can be)
