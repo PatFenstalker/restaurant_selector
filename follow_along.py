@@ -7,7 +7,6 @@ in_file_list = []
 
 final_selection = []
 
-
 class Window(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
@@ -31,7 +30,6 @@ class Window(Tk):
     def show_frame(self, context):
         frame = self.frames[context]
         frame.tkraise()
-
 
 class LandingPage(Frame):
     def __init__(self, parent, controller):
@@ -64,12 +62,11 @@ class LandingPage(Frame):
         check = Button(bottom_frame, text = 'Check Restaurants', fg='white', bg='#4e3632', command= lambda:controller.show_frame(CheckRestaurants))
         check.place(relx=0.125, rely=0.4125, relheight = 0.25, width = 110)
 
-        add = Button(bottom_frame, text = 'Add Restaurants', fg='white', bg='#4e3632', command= lambda:controller.show_frame(AddRestaurants))
+        add = Button(bottom_frame, text = 'Add Restaurant', fg='white', bg='#4e3632', command= lambda:controller.show_frame(AddRestaurants))
         add.place(relx=0.425, rely=0.4125, relheight = 0.25, width = 110)
 
-        choose = Button(bottom_frame, text = 'Choose Restaurants', fg='white', bg='#4e3632', command= lambda:controller.show_frame(ChooseRestaurants))
+        choose = Button(bottom_frame, text = 'Choose Restaurant', fg='white', bg='#4e3632', command= lambda:controller.show_frame(ChooseRestaurants))
         choose.place(relx=0.725, rely=0.4125, relheight = 0.25, width = 110)
-
 
 class CheckRestaurants(Frame):
     def __init__(self, parent, controller):
@@ -114,6 +111,9 @@ class CheckRestaurants(Frame):
                 for line in data:
                     del line
             
+                removed = ctypes.windll.user32.MessageBoxW
+                removed(None, 'All Restaurants been removed to the list.\n\nMake sure to refresh the restaurant list to see changes.', 'Restaurants Removed', 0)
+            
 
         def refresh_list(self):
             bottom_frame.after(0, bottom_frame.destroy)
@@ -142,7 +142,6 @@ class CheckRestaurants(Frame):
             back = Button(new_frame, text = 'Back', fg='white', bg='#4e3632', command= lambda:controller.show_frame(LandingPage))
             back.place(relx = 0.68, rely = 0.875, relheight = 0.06, width = 100)
 
-
 class AddRestaurants(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
@@ -158,7 +157,7 @@ class AddRestaurants(Frame):
         bottom_frame = Frame(self, bg='#dc9955', bd=10)
         bottom_frame.place(relx = 0.5, rely = 0.35, relwidth=0.5, relheight=0.3, anchor='n')
 
-        header_label = Label(bottom_frame, text = '\nEnter the restaurant you would like to add to the list.', bg='#e5d6b9', font='Arial', anchor='n')
+        header_label = Label(bottom_frame, text = '\nEnter the name of the restaurant you would like to add to the list.', bg='#e5d6b9', font='Arial', anchor='n')
         header_label.place(relx = 0, rely = 0, relwidth = 1, relheight = 1)
 
 
@@ -167,15 +166,19 @@ class AddRestaurants(Frame):
 
             if user_input == '':
                 no_input = ctypes.windll.user32.MessageBoxW
-                no_input(None, 'Please enter the name of a restaurant you would like to add', 'Error', 0)
+                no_input(None, 'Please enter the name of a restaurant you would like to add.', 'Error', 0)
 
             else:
                 with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'a+') as file:
                     n = '\n\nName: '
                     file.write(n + user_input.title())
+                    added = ctypes.windll.user32.MessageBoxW
+                    added(None, f'{user_input.title()} has been added to the list.\n\nMake sure to refresh the restaurant list to see changes.', 'Restaurant Added', 0)
 
         def delete_text(self):
             entry_field.delete(1.0, END)
+
+
        
         entry_field = Text(bottom_frame, font= 'Arial', width = 25, height = 1, bd = 5)
         entry_field.bind('<KeyPress-Return>', retrieve_input)
@@ -185,9 +188,8 @@ class AddRestaurants(Frame):
         add_to_list = Button(bottom_frame, text = 'Add', fg='white', bg='#4e3632', command = lambda: [retrieve_input(self), delete_text(self)])
         add_to_list.place(relx = 0.2, rely = 0.62, relheight = 0.15, width = 100)
 
-        back = Button(bottom_frame, text = 'Back', fg='white', bg='#4e3632', command = lambda:controller.show_frame(LandingPage))
+        back = Button(bottom_frame, text = 'Back', fg='white', bg='#4e3632', command = lambda: [controller.show_frame(LandingPage), delete_text(self)])
         back.place(relx = 0.6, rely = 0.62, relheight = 0.15, width = 100)
-
 
 class ChooseRestaurants(Frame):
     def __init__(self, parent, controller):
@@ -204,7 +206,7 @@ class ChooseRestaurants(Frame):
         top_frame = Frame(self, bg='#dc9955', bd=5)
         top_frame.place(relx = 0.5, rely = 0.05, relwidth=0.75, relheight=0.10, anchor='n')
 
-        header_label = Label(top_frame, text = "Choose a Restaurant to go to.", bg='#e5d6b9', font='Arial')
+        header_label = Label(top_frame, text = "Choose a restaurant to go to.", bg='#e5d6b9', font='Arial')
         header_label.place(relx = 0, rely = 0, relwidth = 1, relheight = 1)
 
         bottom_frame = Frame(self, bg='#dc9955', bd=10)
@@ -215,26 +217,40 @@ class ChooseRestaurants(Frame):
 
         in_list = Listbox(bottom_frame, selectmode = MULTIPLE, activestyle = 'none', width = 25, bg = '#bfb97f', height = 15,
         selectbackground = '#e5c558', highlightcolor = '#000000', font = 'Arial 12 bold')
-        in_list.place(relx = 0.3425, rely = 0.1125)
+        in_list.place(relx = 0.3425, rely = 0.1125)        
 
-        #listbox_scrollbar = Scrollbar(in_list, orient = 'vertical')
-        #listbox_scrollbar.pack()
-        #listbox_scrollbar.config(command = in_list.yview)
-        #in_list.config(yscrollcommand=listbox_scrollbar.set)
+        refresh_btn = Button(bottom_frame, text = 'Refresh', fg='white', bg='#4e3632', command= lambda: refresh_listbox(self))
+        refresh_btn.place(relx = 0.225, rely = 0.8125, width = 110, relheight = 0.075)
 
+        choose_rest = Button(bottom_frame, text = 'Choose Restaurant', fg='white', bg='#4e3632', 
+        command = lambda: [check_if_selected(self), less_than_two(self), reset(self)])
+        choose_rest.place(relx = 0.425, rely = 0.8125, width = 110, relheight = 0.075)
+                        
+        back = Button(bottom_frame, text = 'Back', fg='white', bg='#4e3632', command= lambda: [reset(self), controller.show_frame(LandingPage), ])
+        back.place(relx = 0.625, rely = 0.8125, width = 110, relheight = 0.075) 
+
+        def create_listbox(self):
         
-
-        with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'r') as file:
-            for line in file:
-                if 'Name: ' in line:
-                    in_file_list.append(str(line.strip()[6:]))
-        
-        num = 0
+            with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'r') as file:
+                for line in file:
+                    if 'Name: ' in line:
+                        in_file_list.append(str(line.strip()[6:]))
             
-        for item in sorted(set(in_file_list)):
-            num += 1
-            item_space = '                      ' + item            
-            in_list.insert(num, item_space)
+            num = 0
+                
+            for item in sorted(set(in_file_list)):
+
+                num += 1
+
+                formula = int((26 - (len(item)*2) / 2))
+
+                item_space = [' ' * formula]
+                        
+                item_space.append(item)    
+
+                in_list.insert(num, ''.join(item_space))
+
+        create_listbox(self)
 
         def check_if_selected(self):
             all_items = in_list.get(0, END)
@@ -247,29 +263,18 @@ class ChooseRestaurants(Frame):
             in_list.selection_clear(0, END)
 
         def rand_number(self):
-            rand_num = random.randint(0, 100)
+            rand_num = random.randint(0, 1000)
             return rand_num
 
         def select_winner(self):
 
+            # declares global variables so the items can be removed once the funtion finishes
+
             global final_selection
-            global in_file_list
 
+            # creates a range from 1 - 1000 in case there more than 100 restaurants
 
-            print('ifl')
-            for item in final_selection:
-                print(item)
-            print('--------------')
-
-            print('fs')
-
-            for item in final_selection:
-                print(item)
-            print('--------------')
-
-            # creates a range from 1 - 100
-
-            item_range = np.arange(100)
+            item_range = np.arange(1000)
 
             # establish a number for the range to be divided evenly by
 
@@ -300,60 +305,35 @@ class ChooseRestaurants(Frame):
 
             final_selection = []
 
-            in_file_list = []
+        def less_than_two(self):
 
+            count = 0
 
+            for item in in_list.curselection():
+                count += 1
 
-
-
-                        
-        def clear_final_selection(self):
-            in_list.selection_clear(0, END)
-
-        refresh_btn = Button(bottom_frame, text = 'Refresh', fg='white', bg='#4e3632', command= lambda: [refresh_listbox(self), reset(self)])
-        refresh_btn.place(relx = 0.225, rely = 0.8125, width = 110, relheight = 0.075)
-
-        choose_rest = Button(bottom_frame, text = 'Choose Restaurant', fg='white', bg='#4e3632', 
-        command = lambda: [check_if_selected(self), select_winner(self), reset(self)])
-        choose_rest.place(relx = 0.425, rely = 0.8125, width = 110, relheight = 0.075)
-                        
-        back = Button(bottom_frame, text = 'Back', fg='white', bg='#4e3632', command= lambda: [controller.show_frame(LandingPage), reset(self)])
-        back.place(relx = 0.625, rely = 0.8125, width = 110, relheight = 0.075)     
-        
+            if count < 2:
+                MessageBox = ctypes.windll.user32.MessageBoxW
+                MessageBox(None, 'Please select at least two restaurants to choose between.', 'Error', 0)
+            
+            else:
+                select_winner(self)
 
         def refresh_listbox(self):
+            global in_file_list
+            global final_selection
+
+            in_file_list = []
+            final_selection = []
+
             in_list.after(0, in_list.destroy)
             back.after(0, back.destroy)
             choose_rest.after(0, choose_rest.destroy)
             refresh_btn.after(0, refresh_btn.destroy)
 
-            for resta in in_file_list:
-                del resta
-
-            print(in_file_list)
-            print('---------')
-
-            for restau in final_selection:
-                del restau
-            
-            print(final_selection)
-            print('---------')
-
             new_in_list = Listbox(bottom_frame, selectmode = MULTIPLE, activestyle = 'none', width = 25, height =15, bg = '#bfb97f',
             selectbackground = '#e5c558', highlightcolor = '#000000', font = 'Arial 12 bold')
             new_in_list.place(relx = 0.3425, rely = 0.1125)
-
-            with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'r') as file:
-                for line in file:
-                    if 'Name: ' in line:
-                        in_file_list.append(str(line.strip()[6:]))
-
-            num = 0
-            
-            for item in sorted(set(in_file_list)):
-                num += 1
-                item_space = '                      ' + item            
-                new_in_list.insert(num, item_space)
             
             def new_check_if_selected(self):
                 all_items = new_in_list.get(0, END)
@@ -362,22 +342,55 @@ class ChooseRestaurants(Frame):
                 for rest in sel_list:
                     final_selection.append(rest.strip())
 
-            def new_clear_final_selection(self):                
+            def new_reset(self):
                 new_in_list.selection_clear(0, END)
 
-                for item in final_selection:
-                    print(item)  
+            def new_less_than_two(self):
+
+                count = 0
+
+                for item in new_in_list.curselection():
+                    count += 1
+
+                if count < 2:
+                    MessageBox = ctypes.windll.user32.MessageBoxW
+                    MessageBox(None, 'Please select at least two restaurants to choose between.', 'Error', 0)
+                
+                else:
+                    select_winner(self)
+
+            def new_create_listbox(self):
+        
+                with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'r') as file:
+                    for line in file:
+                        if 'Name: ' in line:
+                            in_file_list.append(str(line.strip()[6:]))
+                
+                num = 0
+                    
+                for item in sorted(set(in_file_list)):
+
+                    num += 1
+
+                    formula = int((26 - (len(item)*2) / 2))
+
+                    item_space = [' ' * formula]
+                            
+                    item_space.append(item)    
+
+                    new_in_list.insert(num, ''.join(item_space))
+
+            new_create_listbox(self)
 
             new_refresh_btn = Button(bottom_frame, text = 'Refresh', fg='white', bg='#4e3632', command= lambda: [refresh_listbox(self)])
             new_refresh_btn.place(relx = 0.225, rely = 0.8125, width = 110, relheight = 0.075)
 
             new_choose_rest = Button(bottom_frame, text = 'Choose Restaurant', fg='white', bg='#4e3632', 
-            command = lambda: [new_check_if_selected(self), select_winner(self), new_clear_final_selection(self)])
+            command = lambda: [new_check_if_selected(self), new_less_than_two(self), new_reset(self)])
             new_choose_rest.place(relx = 0.425, rely = 0.8125, width = 110, relheight = 0.075)
 
             new_back = Button(bottom_frame, text = 'Back', fg='white', bg='#4e3632', command= lambda: [controller.show_frame(LandingPage)])
             new_back.place(relx = 0.625, rely = 0.8125, width = 110, relheight = 0.075)
-
 
 window = Window()
 window.title('Restaurant Selector')
