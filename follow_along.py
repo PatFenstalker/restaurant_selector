@@ -38,7 +38,7 @@ class LandingPage(Frame):
         canvas = Canvas(self, height=200, width=1000)
         canvas.pack()
 
-        background_image = PhotoImage(file='C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\flavortown.png')
+        background_image = PhotoImage(file='C:\\Users\\Sephi\\Desktop\\Python\\Final\\flavortown.png')
         background_label = Label(self, image=background_image)
         background_label.image = background_image
         background_label.place(relheight = 1, relwidth = 1)
@@ -75,7 +75,7 @@ class CheckRestaurants(Frame):
         canvas = Canvas(self, height=800, width=1000)
         canvas.pack()
 
-        background_image = PhotoImage(file='C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\flavortown.png')
+        background_image = PhotoImage(file='C:\\Users\\Sephi\\Desktop\\Python\\Final\\flavortown.png')
         background_label = Label(self, image=background_image)
         background_label.image = background_image
         background_label.place(relheight = 1, relwidth = 1)
@@ -85,7 +85,7 @@ class CheckRestaurants(Frame):
 
         restaurants_in_data_file = []
 
-        with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'r') as data:
+        with open('C:\\Users\\Sephi\Desktop\\Python\\Final\\restaurant_database.txt', 'r') as data:
             for line in data:
                 if 'Name: ' in line:
                     restaurants_in_data_file.append(str(line.strip()[6:]))
@@ -107,12 +107,12 @@ class CheckRestaurants(Frame):
         
 
         def remove_items(self):
-            with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'w+') as data:
+            with open('C:\\Users\\Sephi\\Desktop\\Python\\Final\\restaurant_database.txt', 'w+') as data:
                 for line in data:
                     del line
             
                 removed = ctypes.windll.user32.MessageBoxW
-                removed(None, 'All Restaurants been removed to the list.\n\nMake sure to refresh the restaurant list to see changes.', 'Restaurants Removed', 0)
+                removed(None, 'All Restaurants been removed from the list.\n\nMake sure to refresh the restaurant list to see changes.', 'Restaurants Removed', 0)
             
 
         def refresh_list(self):
@@ -123,7 +123,7 @@ class CheckRestaurants(Frame):
         
             restaurants_in_data_file = []
 
-            with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'r') as data:
+            with open('C:\\Users\\Sephi\\Desktop\\Python\\Final\\restaurant_database.txt', 'r') as data:
                 for line in data:
                     if 'Name: ' in line:
                         restaurants_in_data_file.append(str(line.strip()[6:]))
@@ -149,7 +149,7 @@ class AddRestaurants(Frame):
         canvas = Canvas(self, height=800, width=1000)
         canvas.pack()
 
-        background_image = PhotoImage(file='C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\flavortown.png')
+        background_image = PhotoImage(file='C:\\Users\\Sephi\\Desktop\\Python\\Final\\flavortown.png')
         background_label = Label(self, image=background_image)
         background_label.image = background_image
         background_label.place(relheight = 1, relwidth = 1)
@@ -169,7 +169,7 @@ class AddRestaurants(Frame):
                 no_input(None, 'Please enter the name of a restaurant you would like to add.', 'Error', 0)
 
             else:
-                with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'a+') as file:
+                with open('C:\\Users\\Sephi\\Desktop\\Python\\Final\\restaurant_database.txt', 'a+') as file:
                     n = '\n\nName: '
                     file.write(n + user_input.title())
                     added = ctypes.windll.user32.MessageBoxW
@@ -198,7 +198,7 @@ class ChooseRestaurants(Frame):
         canvas = Canvas(self, height=800, width=1000)
         canvas.pack()
 
-        background_image = PhotoImage(file='C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\flavortown.png')
+        background_image = PhotoImage(file='C:\\Users\\Sephi\\Desktop\\Python\\Final\\flavortown.png')
         background_label = Label(self, image=background_image)
         background_label.image = background_image
         background_label.place(relheight = 1, relwidth = 1)
@@ -231,7 +231,7 @@ class ChooseRestaurants(Frame):
 
         def create_listbox(self):
         
-            with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'r') as file:
+            with open('C:\\Users\\Sephi\\Desktop\\Python\\Final\\restaurant_database.txt', 'r') as file:
                 for line in file:
                     if 'Name: ' in line:
                         in_file_list.append(str(line.strip()[6:]))
@@ -242,13 +242,18 @@ class ChooseRestaurants(Frame):
 
                 num += 1
 
-                formula = int((26 - (len(item)*2) / 2))
+                formula = int((28 - (len(item)*2) / 2))
 
                 item_space = [' ' * formula]
                         
                 item_space.append(item)    
 
                 in_list.insert(num, ''.join(item_space))
+
+                if num > 15:
+                    more_than_15_label = Label(bottom_frame, text = 'Note: List is scrollable if there are more than 15 restaurants.', bg='#e5d6b9', font='Arial', anchor='n')
+                    more_than_15_label.place(relx = 0.2135, rely = 0.73)
+            
 
         create_listbox(self)
 
@@ -330,8 +335,15 @@ class ChooseRestaurants(Frame):
             back.after(0, back.destroy)
             choose_rest.after(0, choose_rest.destroy)
             refresh_btn.after(0, refresh_btn.destroy)
+            bottom_frame.after(0, bottom_frame.destroy)
 
-            new_in_list = Listbox(bottom_frame, selectmode = MULTIPLE, activestyle = 'none', width = 25, height =15, bg = '#bfb97f',
+            new_frame = Frame(self, bg='#dc9955', bd=10)
+            new_frame.place(relx = 0.5, rely = 0.24, relwidth=0.75, relheight=0.66, anchor='n')
+
+            header_label = Label(new_frame, bg='#e5d6b9', font='Arial', anchor='n')
+            header_label.place(relx = 0, rely = 0, relwidth = 1, relheight = 1)
+
+            new_in_list = Listbox(new_frame, selectmode = MULTIPLE, activestyle = 'none', width = 25, height =15, bg = '#bfb97f',
             selectbackground = '#e5c558', highlightcolor = '#000000', font = 'Arial 12 bold')
             new_in_list.place(relx = 0.3425, rely = 0.1125)
             
@@ -361,7 +373,7 @@ class ChooseRestaurants(Frame):
 
             def new_create_listbox(self):
         
-                with open('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\restaurant_database.txt', 'r') as file:
+                with open('C:\\Users\\Sephi\\Desktop\\Python\\Final\\restaurant_database.txt', 'r') as file:
                     for line in file:
                         if 'Name: ' in line:
                             in_file_list.append(str(line.strip()[6:]))
@@ -372,7 +384,7 @@ class ChooseRestaurants(Frame):
 
                     num += 1
 
-                    formula = int((26 - (len(item)*2) / 2))
+                    formula = int((28 - (len(item)*2) / 2))
 
                     item_space = [' ' * formula]
                             
@@ -380,21 +392,26 @@ class ChooseRestaurants(Frame):
 
                     new_in_list.insert(num, ''.join(item_space))
 
+                    if num > 15:
+                        more_than_15_label = Label(new_frame, text = 'Note: List is scrollable if there are more than 15 restaurants.', bg='#e5d6b9', font='Arial', anchor='n')
+                        more_than_15_label.place(relx = 0.2135, rely = 0.73)
+
+
             new_create_listbox(self)
 
-            new_refresh_btn = Button(bottom_frame, text = 'Refresh', fg='white', bg='#4e3632', command= lambda: [refresh_listbox(self)])
+            new_refresh_btn = Button(new_frame, text = 'Refresh', fg='white', bg='#4e3632', command= lambda: [refresh_listbox(self)])
             new_refresh_btn.place(relx = 0.225, rely = 0.8125, width = 110, relheight = 0.075)
 
-            new_choose_rest = Button(bottom_frame, text = 'Choose Restaurant', fg='white', bg='#4e3632', 
+            new_choose_rest = Button(new_frame, text = 'Choose Restaurant', fg='white', bg='#4e3632', 
             command = lambda: [new_check_if_selected(self), new_less_than_two(self), new_reset(self)])
             new_choose_rest.place(relx = 0.425, rely = 0.8125, width = 110, relheight = 0.075)
 
-            new_back = Button(bottom_frame, text = 'Back', fg='white', bg='#4e3632', command= lambda: [controller.show_frame(LandingPage)])
+            new_back = Button(new_frame, text = 'Back', fg='white', bg='#4e3632', command= lambda: [controller.show_frame(LandingPage)])
             new_back.place(relx = 0.625, rely = 0.8125, width = 110, relheight = 0.075)
 
 window = Window()
 window.title('Restaurant Selector')
-window.iconbitmap('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\borger.ico')
+#window.iconbitmap('C:\\Users\\pat74648\\OneDrive - Spectrum Health\\Desktop\\Python\\final\\borger.ico')
 window.maxsize(1000, 800)
 
 window.mainloop()
